@@ -1,0 +1,343 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Gestión de Mensajes motivadores.",
+    "description": "Esta API permite gestionar mensajes motivadores en una aplicación.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "API de desarollo."
+    }
+  ],
+  "paths": {
+    "/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Autentica un usuario y devuelve un token",
+        "description": "Permite a los usuarios iniciar sesión con nombre de usuario y contraseña utilizando Basic Authentication. El token de autenticación será devuelto en una cookie.",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Login exitoso y token enviado en la cookie.",
+            "headers": {
+              "Set-Cookie": {
+                "description": "Cookie que contiene el token JWT.",
+                "schema": {
+                  "type": "string",
+                  "example": "token=<tu-token-aqui>"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Mensaje de confirmación."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos pasado incorrectos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReponseError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Credenciales incorrectas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReponseError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/register": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Registra un nuevo usuario.",
+        "description": "Registra o crea un nuevo usuario en el sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nombre del usuario."
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "contraseña del usuario."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registrado con exito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Mensaje de confirmación."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "ID del usuario registrado."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos pasado incorrectos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReponseError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Obtiene todos los mensajes",
+        "description": "Recupera una lista de todos los mensajes registrados en el sistema.",
+        "responses": {
+          "200": {
+            "description": "Lista de mensajes obtenida con éxito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReponseMessage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Crea un mensaje.",
+        "description": "Crea un mensaje.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestMessage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mensaje creado."
+          }
+        }
+      }
+    },
+    "/messages/{id}": {
+      "get": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Busca por ID.",
+        "description": "Busca un mensaje por ID.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID del mensaje que quieres buscar.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario obtenido con éxito.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReponseMessage"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Mensaje no encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Actualiza un mensaje.",
+        "description": "Actualiza un mensaje por ID.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestMessage"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID del mensaje que quieres actualizar.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mensaje actualizado con éxito."
+          },
+          "400": {
+            "description": "Mensaje no actualizado."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Messages"
+        ],
+        "summary": "Elimina un mensaje.",
+        "description": "Elimina un mensaje por ID.",
+        "security": [
+          {
+            "CookieAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "description": "ID del mensaje que quieres eliminar.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mensaje eliminado con éxito."
+          },
+          "400": {
+            "description": "Mensaje no eliminado."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "CookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "token"
+      },
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "ReponseMessage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID."
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensaje."
+          },
+          "author": {
+            "type": "string",
+            "description": "Autor del mensaje."
+          }
+        }
+      },
+      "ReponseError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "La descripción del error."
+          }
+        }
+      },
+      "RequestMessage": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensaje."
+          },
+          "author": {
+            "type": "string",
+            "description": "Autor del mensaje."
+          }
+        },
+        "required": [
+          "message"
+        ]
+      }
+    }
+  }
+}
