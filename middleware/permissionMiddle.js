@@ -10,6 +10,4 @@ export function permissionMiddle(app) {
         res.status(401).json({message:"error"})
         }
     }
-    app.put('/messages',  permission)
-    app.delete('/messages',  permission)
 }

@@ -33,7 +33,7 @@ import Zod from 'zod';
       }),
     });
 
-    return messageSchema.partial().safeParse(obj)
+    return messageSchema.safeParse(obj)
   };
 
   

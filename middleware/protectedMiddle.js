@@ -14,6 +14,6 @@ export function protecredMiddle(app) {
     }
     app.post('/messages', authentication)
     app.get('/messages/user', authentication)
-    app.delete('/messages',  authentication)
-    app.put('/messages',  authentication)
+    app.delete('/messages/:id',  authentication)
+    app.put('/messages/:id',  authentication)
 }

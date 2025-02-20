@@ -34,7 +34,12 @@ export class MessageController {
 
     static async update(req, res) {
         const result = validatePartial(req.body)
-        if (!result.success) return res.status(400).json({ error: result.error })
+        let message = await MessageModel.getById({id:parseInt(req.params.id)});
+        if (!result.success || message.length === 0) return res.status(400).json({ error: "invalidate data" })
+        const userID = req.body.userId
+        if(message[0].author !== userID) {
+            return res.status(401).json({ error: "sin permisos" })
+        }
         const sendMessege = await MessageModel.update({ id: parseInt(req.params.id), input: result.data }) ? "Registro actualizado" : "Error al actualizar el registro"
         return res.json({ message: sendMessege })
     }
