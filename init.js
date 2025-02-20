@@ -8,6 +8,7 @@ const app = express()
 app.use(cors({
   origin: 'http://localhost:4200',  // Permitir solo el frontend de localhost:4200
   credentials: true,  // Permitir el uso de cookies
+  methods:['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
 }))
 app.use(express.json())
 app.use(cookieParse())
