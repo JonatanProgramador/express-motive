@@ -28,8 +28,13 @@ export class MessageController {
             return res.status(400).json({ error: result.error })
         }
         result.data.author = req.body.userId
-        const bye = await MessageModel.create({ input: result.data })
-        return bye>0?res.status(201).json({message:"Creado correctamente", id:bye}):res.status(500).json({message:"Error al crear"})
+        const messageId = await MessageModel.create({ input: result.data })
+        if(messageId) {
+            const message = await MessageResource.get(await MessageModel.getById({id:messageId}))
+            return res.status(201).json(message[0])
+        } else {
+            return res.status(500).json({message:"Error al crear"})
+        }
     }
 
     static async update(req, res) {
