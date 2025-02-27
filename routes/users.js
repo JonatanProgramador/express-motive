@@ -6,5 +6,6 @@ export const routerUsers = () => {
     router.post('/login', UserController.login)
     router.post('/register', UserController.register)
     router.post('/logout', UserController.logout)
+    router.get('/auth', UserController.isAuth)
     return router
 }

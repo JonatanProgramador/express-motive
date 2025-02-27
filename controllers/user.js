@@ -37,4 +37,8 @@ export class UserController {
         res.json({ message: "Logout" })
     }
 
+    static async isAuth(req, res) {
+        return res.json({result:req.body.userId !== undefined})
+    }
+
 }
