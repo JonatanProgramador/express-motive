@@ -34,7 +34,7 @@ export class UserController {
 
 
     static async logout(req, res) {
-        res.json({ message: "Logout" })
+       return res.clearCookie('token').json({message:"Logout"});
     }
 
     static async isAuth(req, res) {
