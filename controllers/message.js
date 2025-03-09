@@ -2,12 +2,14 @@ import { MessageModel } from '../models/message_mysql.js';
 import { validatePost, validatePartial, validateFind } from '../request/message.js';
 import { MessageResource } from '../resoucers/MessageResource.js';
 
+//TODO. Implemetar el manejo del error cuando no se conecta a la base de datos.
+
 export class MessageController {
 
     static async getAll(req, res) {
         let result
         result = await MessageResource.get(await MessageModel.getAll())
-        res.json(result)
+        return result ?res.json(result):res.status(500).json({error:"Error en el servidor"});
     }
 
     static async getAllByUser(req, res) {
