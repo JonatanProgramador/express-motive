@@ -1,6 +1,6 @@
 import { Mysql } from '../libs/Mysql.js';
 
-//TODO. Implemetar el manejo del error cuando no se conecta a la base de datos.
+
 
 export class MessageModel {
 
